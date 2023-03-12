@@ -1,4 +1,4 @@
-DESTDIR=/
+DESTDIR=$(shell pwd)
 PROJECT=diamond
 VERSION :=$(shell bash version.sh )
 RELEASE :=$(shell ls -1 dist/*.noarch.rpm 2>/dev/null | wc -l )

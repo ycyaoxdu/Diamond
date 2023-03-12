@@ -13,6 +13,8 @@ class DpdkLogCollector(diamond.collector.Collector):
         super(DpdkLogCollector, self).process_config()
         self.hostname = self.config['hostname']
         self.port = self.config['port']
+        self.server_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+       
 
     def get_default_config_help(self):
         config_help =  super(DpdkLogCollector, self).get_default_config_help()
@@ -37,15 +39,12 @@ class DpdkLogCollector(diamond.collector.Collector):
 
     def collect(self ):
         # TODO: should connect and close in this function? 
-        server_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_client.connect((self.hostname, self.port)) 
+        self.server_client.connect((self.hostname, self.port)) 
        
-        recv_str = server_client.recv(128)
+        recv_str = self.server_client.recv(128)
         recv_str = recv_str.decode("ascii")
         print("receive:{}".format(recv_str))
 
         # publish numbers
-        self.publish("numbers:", recv_str)
+        self.publish("numbers:", str(recv_str).split( )[-1])
 
-        server_client.close()
-        print("client end, close!")
